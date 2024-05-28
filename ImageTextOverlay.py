@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
+from urllib.request import urlopen
 import torch
 import numpy as np
 
@@ -72,7 +73,7 @@ class ImageTextOverlay:
 
         font_size = max_font_size
         while font_size >= 1:
-            loaded_font = ImageFont.truetype(font, font_size)
+            loaded_font = ImageFont.truetype(urlopen(font), font_size) if font.startswith("http") else ImageFont.truetype(font, font_size)
             wrapped_text, total_text_height = self.wrap_text_and_calculate_height(text, loaded_font, effective_textbox_width, line_height)
 
             if total_text_height <= effective_textbox_height:
