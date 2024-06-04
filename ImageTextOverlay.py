@@ -33,10 +33,15 @@ class ImageTextOverlay:
                 "start_y": ("INT", {"default": 0}),
                 "padding": ("INT", {"default": 50}),
                 "line_height": ("INT", {"default": 20, "min": 1}),
+                "previous_y": ("INT", {"default": 0}),
             }
         }
 
-    RETURN_TYPES = ("IMAGE",)
+    RETURN_TYPES = ("IMAGE", "INT")
+    RETURN_NAMES = (
+        "image",
+        "end_y",
+    )
     FUNCTION = "add_text_overlay"
     CATEGORY = "image/text"
 
@@ -82,6 +87,7 @@ class ImageTextOverlay:
         color,
         start_x,
         start_y,
+        previous_y,
         padding,
         line_height,
     ):
@@ -118,8 +124,9 @@ class ImageTextOverlay:
                 lines = wrapped_text.split("\n")
                 y = (
                     start_y
+                    + previous_y
                     + padding
-                    + (effective_textbox_height - total_text_height) // 2
+                    # + (effective_textbox_height - total_text_height) // 2
                 )
 
                 for line in lines:
@@ -146,7 +153,8 @@ class ImageTextOverlay:
 
         image_tensor_out = torch.tensor(np.array(image_pil).astype(np.float32) / 255.0)
         image_tensor_out = torch.unsqueeze(image_tensor_out, 0)
-        return (image_tensor_out,)
+        end_y = int(start_y + total_text_height)
+        return (image_tensor_out, end_y)
 
 
 NODE_CLASS_MAPPINGS = {
