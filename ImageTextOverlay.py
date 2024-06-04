@@ -153,7 +153,7 @@ class ImageTextOverlay:
 
         image_tensor_out = torch.tensor(np.array(image_pil).astype(np.float32) / 255.0)
         image_tensor_out = torch.unsqueeze(image_tensor_out, 0)
-        end_y = int(start_y + total_text_height)
+        end_y = int(start_y + total_text_height + previous_y)
         return (image_tensor_out, end_y)
 
 
