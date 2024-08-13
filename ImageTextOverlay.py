@@ -111,6 +111,8 @@ class ImageTextOverlay:
                         response = requests.get(font)
                         f.write(response.content)
                         font = font_name
+                else:
+                    font = font_name
 
             fonts_dir = os.path.join(os.path.dirname(__file__), "fonts")
             font_path = os.path.join(fonts_dir, font)
