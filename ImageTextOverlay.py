@@ -3,6 +3,7 @@ from urllib.request import urlopen
 import torch
 import numpy as np
 import os
+import requests
 
 
 class ImageTextOverlay:
@@ -101,6 +102,16 @@ class ImageTextOverlay:
 
         font_size = max_font_size
         while font_size >= 1:
+            if font.startswith("https://"):
+                # Load font from URL
+                font_name = font.split("/")[-1]
+                font_path = os.path.join(os.path.dirname(__file__), "fonts", font_name)
+                if not os.path.exists(font_path):
+                    with open(font_path, "wb") as f:
+                        response = requests.get(font)
+                        f.write(response.content)
+                        font = font_name
+
             fonts_dir = os.path.join(os.path.dirname(__file__), "fonts")
             font_path = os.path.join(fonts_dir, font)
 
